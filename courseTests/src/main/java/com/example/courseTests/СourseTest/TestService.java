@@ -10,18 +10,24 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-
 public class TestService {
     private final TestRepository testRepository;
+    private final CourseClient courseClient;
 
     public void createTest(TestRequest testRequest) {
-        Test test = Test.builder()
-        .title(testRequest.title())
-        .description(testRequest.description())
-        .timeLimit(testRequest.timeLimit())
-        .courseId(testRequest.courseId())
-        .build();
+        CourseDTO course = courseClient.getCourseById(testRequest.courseId());
 
+        if (course == null) {
+            throw new RuntimeException("Course with ID " + testRequest.courseId() + " does not exist");
+        }
+    
+        Test test = Test.builder()
+            .title(testRequest.title())
+            .description(testRequest.description())
+            .timeLimit(testRequest.timeLimit())
+            .courseId(testRequest.courseId())
+            .build();
+    
         testRepository.save(test);
         log.info("Test {} is saved", test.getId());
     }

@@ -1,6 +1,7 @@
 package com.example.course.course;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,17 @@ public class CourseService {
 
         courseRepository.save(course);
         log.info("Course {} is saved", course.getId());
+    }
+
+    public Course getCourseById(String id) {
+        Optional<Course> courseOptional = courseRepository.findById(id);
+        
+        if (courseOptional.isPresent()) {
+            return courseOptional.get();
+        } else {
+            log.warn("Course with ID {} not found", id);
+            throw new RuntimeException("Course not found with ID: " + id);
+        }
     }
 
     public List<CourseResponse> getAllCourses() {
