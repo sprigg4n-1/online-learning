@@ -19,6 +19,7 @@ public class TestService {
         .title(testRequest.title())
         .description(testRequest.description())
         .timeLimit(testRequest.timeLimit())
+        .courseId(testRequest.courseId())
         .build();
 
         testRepository.save(test);
@@ -32,6 +33,6 @@ public class TestService {
     }
 
     private TestResponse mapToTestResponse(Test test) {
-        return new TestResponse(test.getId(), test.getTitle(), test.getDescription(), test.getTimeLimit());
+        return new TestResponse(test.getId(), test.getTitle(), test.getDescription(), test.getTimeLimit(), test.getCourseId());
     }
 }

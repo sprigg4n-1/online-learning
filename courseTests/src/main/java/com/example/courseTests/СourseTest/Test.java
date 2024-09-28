@@ -19,5 +19,5 @@ public class Test {
     private String title;
     private String description;
     private int timeLimit;    
-    private String CourseId;
+    private String courseId;
 }
