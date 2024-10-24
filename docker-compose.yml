@@ -11,3 +11,48 @@ services:
       MONGO_INITDB_DATABASE: course-service
     volumes:
       - ./docker/mongodb/data:/data/db
+  course-service:
+    image: course-service
+    build: 
+      context: ./course
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: courseservice 
+      MONGO_PORT: 27017
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - onlinelearning-network
+  coursetests-service:
+    image: coursetests-service
+    build: 
+      context: ./courseTests
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_DATABASE: testsservice 
+      MONGO_PORT: 27017
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    networks:
+      - onlinelearning-network
+  api-gateway-service:
+    image: api-gateway-service
+    build:
+      context: ./api-geteway
+      dockerfile: Dockerfile
+    environment:
+      COURSES_URL: http://course-service:8080
+      TESTS_URL: http://coursetests-service:8081
+    ports:
+      - "9000:9000"
+    networks:
+      - onlinelearning-network
+networks:
+  onlinelearning-network:
+    driver: bridge

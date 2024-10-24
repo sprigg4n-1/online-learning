@@ -1,5 +1,7 @@
 package com.example.api_geteway;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
+import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +16,29 @@ public class Routes {
     @Bean
     public RouterFunction<ServerResponse> courseServiceRoute() {
         return route("courseservice")
-                .route(RequestPredicates.path("/api/course"), http("http://localhost:8081"))
+                .route(RequestPredicates.path("/api/course"), http("http://localhost:8080"))
                 .build();    
     }
     @Bean
     public RouterFunction<ServerResponse> testsServiceRoute() {
         return route("testsservice")
-                .route(RequestPredicates.path("/api/test"), http("http://localhost:8082"))
+                .route(RequestPredicates.path("/api/test"), http("http://localhost:8081"))
                 .build();    
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> courseServiceSwaggerRoute() {
+        return GatewayRouterFunctions.route("course_service_swagger")
+                .route(RequestPredicates.path("/aggregate/courseservice/v3/api-docs"), http(System.getenv("COURSES_URL")))
+                .filter(setPath("/api-docs"))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> testsServiceSwaggerRoute() {
+        return GatewayRouterFunctions.route("tests_service_swagger")
+                .route(RequestPredicates.path("/aggregate/testsservice/v3/api-docs"), http(System.getenv("TESTS_URL")))
+                .filter(setPath("/api-docs"))
+                .build();
     }
 }
