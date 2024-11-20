@@ -1,4 +1,3 @@
-version: '4'
 services:
   mongo:
     image: mongo:7.0.5
@@ -11,9 +10,24 @@ services:
       MONGO_INITDB_DATABASE: course-service
     volumes:
       - ./docker/mongodb/data:/data/db
+    networks:
+      - onlinelearning-network
+
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    networks:
+      - onlinelearning-network
+
   course-service:
     image: course-service
-    build: 
+    build:
       context: ./course
       dockerfile: Dockerfile
     environment:
@@ -26,9 +40,10 @@ services:
       - mongo
     networks:
       - onlinelearning-network
+
   coursetests-service:
     image: coursetests-service
-    build: 
+    build:
       context: ./courseTests
       dockerfile: Dockerfile
     environment:
@@ -41,6 +56,7 @@ services:
       - mongo
     networks:
       - onlinelearning-network
+
   api-gateway-service:
     image: api-gateway-service
     build:
@@ -53,6 +69,42 @@ services:
       - "9000:9000"
     networks:
       - onlinelearning-network
+
+  keycloak-mysql:
+    container_name: keycloak-mysql
+    image: mysql:8
+    ports:
+    - "3308:3306"
+    volumes:
+    - ./docker/mysql_keycloak/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: 12345
+    networks:
+    - onlinelearning-network
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0.1
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://keycloak-mysql:3306/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 12345
+      KEYCLOAK_ADMIN: sprigg4n-
+      KEYCLOAK_ADMIN_PASSWORD: Romashka28
+    ports:
+    - "8181:8080"
+    volumes:
+    - ./docker/keycloak/realms/:/opt/keycloak/data/import/
+    depends_on:
+    - keycloak-mysql
+    networks:
+    - onlinelearning-network
+
 networks:
   onlinelearning-network:
     driver: bridge

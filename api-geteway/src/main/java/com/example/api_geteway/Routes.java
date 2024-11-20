@@ -16,13 +16,13 @@ public class Routes {
     @Bean
     public RouterFunction<ServerResponse> courseServiceRoute() {
         return route("courseservice")
-                .route(RequestPredicates.path("/api/course"), http("http://localhost:8080"))
+                .route(RequestPredicates.path("/api/course"), http("http://course-service:8080"))
                 .build();    
     }
     @Bean
     public RouterFunction<ServerResponse> testsServiceRoute() {
         return route("testsservice")
-                .route(RequestPredicates.path("/api/test"), http("http://localhost:8081"))
+                .route(RequestPredicates.path("/api/test"), http("http://coursetests-service:8081"))
                 .build();    
     }
 
