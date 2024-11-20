@@ -1,4 +1,4 @@
-package com.example.course.config;
+package com.example.order.config;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ public class OpenApiConfig {
         var server = new Server().url("http://localhost:" + port);
         return new OpenAPI()
                 .servers(List.of(server))
-                .info(new Info().title("Course Service API")
-                        .description("This is the REST API for Course Service")
+                .info(new Info().title("Order Service API")
+                        .description("This is the REST API for Order Service")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0")));
     }

@@ -23,8 +23,8 @@ public class OpenApiConfig {
         var server = new Server().url("http://localhost:" + port);
         return new OpenAPI()
                 .servers(List.of(server))
-                .info(new Info().title("Inventory Service API")
-                        .description("This is the REST API for Inventory Service")
+                .info(new Info().title("CourseTest Service API")
+                        .description("This is the REST API for CourseTest Service")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0")));
     }

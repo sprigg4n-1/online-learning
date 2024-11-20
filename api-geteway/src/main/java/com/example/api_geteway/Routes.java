@@ -25,6 +25,12 @@ public class Routes {
                 .route(RequestPredicates.path("/api/test"), http("http://coursetests-service:8081"))
                 .build();    
     }
+    @Bean
+    public RouterFunction<ServerResponse> orderServiceRoute() {
+        return route("orderservice")
+                .route(RequestPredicates.path("/api/order"), http("http://order-service:8082"))
+                .build();    
+    }
 
     @Bean
     public RouterFunction<ServerResponse> courseServiceSwaggerRoute() {
@@ -38,6 +44,14 @@ public class Routes {
     public RouterFunction<ServerResponse> testsServiceSwaggerRoute() {
         return GatewayRouterFunctions.route("tests_service_swagger")
                 .route(RequestPredicates.path("/aggregate/testsservice/v3/api-docs"), http(System.getenv("TESTS_URL")))
+                .filter(setPath("/api-docs"))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> orderServiceSwaggerRoute() {
+        return GatewayRouterFunctions.route("order_service_swagger")
+                .route(RequestPredicates.path("/aggregate/orderservice/v3/api-docs"), http(System.getenv("ORDER_URL")))
                 .filter(setPath("/api-docs"))
                 .build();
     }
