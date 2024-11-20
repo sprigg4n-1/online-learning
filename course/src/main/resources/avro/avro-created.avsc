@@ -1,0 +1,6 @@
+{
+  "type": "record",
+  "name": "CourseCreatedEvent",
+  "namespace": "com.example.course.event",
+  "fields": [{ "name": "courseNumber", "type": "string" }]
+}

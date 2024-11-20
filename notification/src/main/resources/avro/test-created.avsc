@@ -1,0 +1,6 @@
+{
+  "type": "record",
+  "name": "TestAddedEvent",
+  "namespace": "com.example.notification.event",
+  "fields": [{ "name": "testNumber", "type": ["null", "string"] }]
+}
